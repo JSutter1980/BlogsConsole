@@ -10,6 +10,7 @@ logger.Info("Program started");
 
 try
 {
+    Console.WriteLine("What would you like to do?:\n1. Display All Blogs\n2. Add a Blog\n3. Create A Post\n4. Display Posts\n");
 
     // Create and save a new Blog
     Console.Write("Enter a name for a new Blog: ");
