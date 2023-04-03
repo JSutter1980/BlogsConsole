@@ -11,25 +11,54 @@ logger.Info("Program started");
 try
 {
     Console.WriteLine("What would you like to do?:\n1. Display All Blogs\n2. Add a Blog\n3. Create A Post\n4. Display Posts\n");
-
-    // Create and save a new Blog
-    Console.Write("Enter a name for a new Blog: ");
-    var name = Console.ReadLine();
-
-    var blog = new Blog { Name = name };
+    var choice = Console.ReadLine();
 
     var db = new BloggingContext();
-    db.AddBlog(blog);
-    logger.Info("Blog added - {name}", name);
 
-    // Display all Blogs from the database
-    var query = db.Blogs.OrderBy(b => b.Name);
-
-    Console.WriteLine("All blogs in the database:");
-    foreach (var item in query)
+    if (choice == "1")
     {
-        Console.WriteLine(item.Name);
+        // Display all Blogs from the database
+        var query = db.Blogs.OrderBy(b => b.Name);
+
+        Console.WriteLine("All blogs in the database:");
+        foreach (var item in query)
+        {
+            Console.WriteLine(item.Name);
+        }
+
     }
+
+    else if (choice == "2")
+    {
+
+        // Create and save a new Blog
+        Console.Write("Enter a name for a new Blog: ");
+        var name = Console.ReadLine();
+
+        var blog = new Blog { Name = name };
+
+        db.AddBlog(blog);
+        logger.Info("Blog added - {name}", name);
+
+    }
+
+    else if (choice == "3")
+    {
+
+        Console.WriteLine("Please select which Blog you would like to add to");
+        var blogChoice = Console.ReadLine();
+
+    }
+
+    else if (choice == "4")
+    {
+
+        Console.WriteLine("Which post would you like to view?");
+        var postChoice = Console.ReadLine();
+
+
+    }
+
 }
 catch (Exception ex)
 {
