@@ -10,7 +10,7 @@ logger.Info("Program started");
 
 try
 {
-    Console.WriteLine("What would you like to do?:\n1. Display All Blogs\n2. Add a Blog\n3. Create A Post\n4. Display Posts\n");
+    Console.WriteLine("What would you like to do?:\n1. Display All Blogs\n2. Add a Blog\n3. Create A Post\n4. Display Posts");
     var choice = Console.ReadLine();
 
     var db = new BloggingContext();
@@ -18,12 +18,12 @@ try
     if (choice == "1")
     {
         // Display all Blogs from the database
-        var query = db.Blogs.OrderBy(b => b.Name);
+        var query = db.Blogs.OrderBy(b => b.BlogId);
 
         Console.WriteLine("All blogs in the database:");
         foreach (var item in query)
         {
-            Console.WriteLine(item.Name);
+            Console.WriteLine($"{item.BlogId}.){item.Name}");
         }
 
     }
@@ -45,13 +45,52 @@ try
     else if (choice == "3")
     {
 
-        Console.WriteLine("Please select which Blog you would like to add to");
-        var blogChoice = Console.ReadLine();
+        Console.WriteLine("Please select number of Blog you would like to add to:");
+
+        var query = db.Blogs.OrderBy(b => b.BlogId);
+        foreach (var item in query)
+        {
+            Console.WriteLine($"{item.BlogId}.){item.Name}");
+
+
+            var blogChoice = Convert.ToInt32(Console.ReadLine());
+
+            if (blogChoice == item.BlogId)
+            {
+                Console.WriteLine("Enter your post title:");
+                var title = Console.ReadLine();
+
+                var post = new Post { Title = title };
+
+                logger.Info("Post added - {name}", title);
+
+                Console.WriteLine("Enter your post:");
+                var postBody = Console.ReadLine();
+
+            }
+
+
+        }
 
     }
 
+
+
+
+
     else if (choice == "4")
     {
+
+        Console.WriteLine("Which Blog would you like to view the posts from?:");
+
+        var query = db.Blogs.OrderBy(b => b.BlogId);
+
+        foreach (var item in query)
+        {
+            Console.WriteLine($"{item.BlogId}.){item.Name}");
+        }
+
+        var blogNumber = Console.ReadLine();
 
         Console.WriteLine("Which post would you like to view?");
         var postChoice = Console.ReadLine();
