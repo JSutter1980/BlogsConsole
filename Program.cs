@@ -8,101 +8,89 @@ string path = Directory.GetCurrentDirectory() + "\\nlog.config";
 var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
 logger.Info("Program started");
 
+
+
 try
-{
-    Console.WriteLine("What would you like to do?:\n1. Display All Blogs\n2. Add a Blog\n3. Create A Post\n4. Display Posts");
-    var choice = Console.ReadLine();
-
+{ 
     var db = new BloggingContext();
-
-    if (choice == "1")
+    string choice;
+    do
     {
-        // Display all Blogs from the database
-        var query = db.Blogs.OrderBy(b => b.BlogId);
+        Console.WriteLine("What would you like to do?:\n1. Display All Blogs\n2. Add a Blog\n3. Create A Post\n4. Display Posts");
+        choice = Console.ReadLine();
 
-        Console.WriteLine("All blogs in the database:");
-        foreach (var item in query)
+        if (choice == "1")
         {
-            Console.WriteLine($"{item.BlogId}.){item.Name}");
+            // Display all Blogs from the database
+            var query = db.Blogs.OrderBy(b => b.BlogId);
+
+            Console.WriteLine("All blogs in the database:");
+            foreach (var item in query)
+            {
+                Console.WriteLine($"{item.BlogId}.){item.Name}");
+            }
         }
 
-    }
-
-    else if (choice == "2")
-    {
-
-        // Create and save a new Blog
-        Console.Write("Enter a name for a new Blog: ");
-        var name = Console.ReadLine();
-
-        var blog = new Blog { Name = name };
-
-        db.AddBlog(blog);
-        logger.Info("Blog added - {name}", name);
-
-    }
-
-    else if (choice == "3")
-    {
-
-        Console.WriteLine("Please select number of Blog you would like to add to:");
-
-        var query = db.Blogs.OrderBy(b => b.BlogId);
-        foreach (var item in query)
+        else if (choice == "2")
         {
-            Console.WriteLine($"{item.BlogId}.){item.Name}");
 
+            // Create and save a new Blog
+            Console.Write("Enter a name for a new Blog: ");
+            var name = Console.ReadLine();
 
-            var blogChoice = Convert.ToInt32(Console.ReadLine());
+            var blog = new Blog { Name = name };
 
-            if (blogChoice == item.BlogId)
+            db.AddBlog(blog);
+            logger.Info("Blog added - {name}", name);
+
+        }
+
+        else if (choice == "3")
+        {
+
+            Console.WriteLine("Please select number of Blog you would like to add to:");
+
+            var query = db.Blogs.OrderBy(b => b.BlogId);
+            foreach (var item in query)
             {
-                Console.WriteLine("Enter your post title:");
-                var title = Console.ReadLine();
+                Console.WriteLine($"{item.BlogId}.){item.Name}");
+            }
+            
+            var post = new Post();
+            post.BlogId = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Enter your post title:");
+            post.Title = Console.ReadLine();    
+            Console.WriteLine("Enter your post:");
+            post.Content = Console.ReadLine();
+            db.AddPost(post);
+            logger.Info("Post added - {name}", post.Title);
+        }
 
-                var post = new Post { Title = title };
+        else if (choice == "4")
 
-                logger.Info("Post added - {name}", title);
+        {
 
-                Console.WriteLine("Enter your post:");
-                var postBody = Console.ReadLine();
+            Console.WriteLine("Which Blog would you like to view the posts from?:");
 
+            var query = db.Blogs.OrderBy(b => b.BlogId);
+
+            foreach (var item in query)
+            {
+                Console.WriteLine($"{item.BlogId}.){item.Name}");
             }
 
+            var blogNumber = Console.ReadLine();
+
 
         }
-
-    }
-
-
-
-
-
-    else if (choice == "4")
-    {
-
-        Console.WriteLine("Which Blog would you like to view the posts from?:");
-
-        var query = db.Blogs.OrderBy(b => b.BlogId);
-
-        foreach (var item in query)
-        {
-            Console.WriteLine($"{item.BlogId}.){item.Name}");
-        }
-
-        var blogNumber = Console.ReadLine();
-
-        Console.WriteLine("Which post would you like to view?");
-        var postChoice = Console.ReadLine();
-
-
-    }
+    }while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
 
 }
 catch (Exception ex)
 {
     logger.Error(ex.Message);
 }
+// }while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
 
 logger.Info("Program ended");
 
