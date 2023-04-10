@@ -58,10 +58,13 @@ try
             
             var post = new Post();
             post.BlogId = Convert.ToInt32(Console.ReadLine());
+
             Console.WriteLine("Enter your post title:");
             post.Title = Console.ReadLine();    
+
             Console.WriteLine("Enter your post:");
             post.Content = Console.ReadLine();
+
             db.AddPost(post);
             logger.Info("Post added - {name}", post.Title);
         }
@@ -70,19 +73,32 @@ try
 
         {
 
-            Console.WriteLine("Which Blog would you like to view the posts from?:");
+            Console.WriteLine("Which Blog would you like to view the posts from?:\n");
 
             var query = db.Blogs.OrderBy(b => b.BlogId);
 
             foreach (var item in query)
             {
-                Console.WriteLine($"{item.BlogId}.){item.Name}");
+                Console.WriteLine($"{item.BlogId}.) {item.Name}");
             }
 
-            var blogNumber = Console.ReadLine();
+            var blogChoice = Convert.ToInt32(Console.ReadLine());
 
+            var postQuery = db.Posts.Where(p => p.BlogId == blogChoice).OrderBy(p => p.Title);
+
+            foreach ( var postItem in postQuery)
+            {
+                Console.WriteLine($" Blog: {postItem.Blog.Name}");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"#{postItem.BlogId} {postItem.Title}");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{postItem.Content}\n");
+                Console.ForegroundColor = ConsoleColor.White;
+                
+            }
 
         }
+
     }while (choice == "1" || choice == "2" || choice == "3" || choice == "4");
 
 }
